@@ -2,7 +2,22 @@ from django.shortcuts import render, redirect
 from django.views import View
 from accounts.models import CustomUser
 from accounts.forms import ProfileForm
+from allauth.account import views
 
+#ログイン用
+class LoginView(views.LoginView):
+    template_name = 'accounts/login.html'
+
+class LogoutView(views.LogoutView):
+    template_name = 'accounts/logout.html'
+
+    def post(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            self.logout()
+        return redirect('/')
+
+
+#プロフィール
 class ProfileView(View):
     def get(self, request, *args, **kwargs):
         #ログイン中ユーザーの取得
