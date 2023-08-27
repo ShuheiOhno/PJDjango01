@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.models import CustomUser
-from accounts.forms import ProfileForm
+from accounts.forms import ProfileForm, SignupUserForm
 from allauth.account import views
 
 #ログイン用
@@ -15,10 +16,14 @@ class LogoutView(views.LogoutView):
         if self.request.user.is_authenticated:
             self.logout()
         return redirect('/')
+    
+class SignupView(views.SignupView):
+    template_name = 'accounts/signup.html'
+    form_class = SignupUserForm
 
 
 #プロフィール
-class ProfileView(View):
+class ProfileView( LoginRequiredMixin ,View):
     def get(self, request, *args, **kwargs):
         #ログイン中ユーザーの取得
         user_data = CustomUser.objects.get(id=request.user.id)
@@ -27,7 +32,7 @@ class ProfileView(View):
             'user_data': user_data,
         })
     
-class ProfileEditView(View):
+class ProfileEditView( LoginRequiredMixin ,View):
     def get(self, request, *args, **kwargs):
         user_data = CustomUser.objects.get(id=request.user.id)
         form_data = ProfileForm(
