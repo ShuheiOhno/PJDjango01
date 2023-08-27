@@ -1,0 +1,6 @@
+myvenv
+.env
+db.sqlite3
+__pycache__
+*.pyc
+memo.txt
