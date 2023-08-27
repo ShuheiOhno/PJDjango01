@@ -14,3 +14,55 @@
   main {
     flex: 1;
   }
+
+
+  /* プロフィール画面 */
+  .card-profile {
+    width: 700px;
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 0.2rem 0.2rem 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .button {
+    width: 150px;
+  }
+  
+  .btn {
+    font-size: 80%;
+    border-radius: 5rem;
+    font-weight: bold;
+  }
+  
+  .profile_table {
+    width: 100%;
+    border: 1px solid #d1dbeb;
+    border-radius: 8px;
+    border-collapse: separate;
+    overflow: hidden;
+  }
+  
+  .profile_table .header {
+    width: 200px;
+    padding: 16px 24px;
+    text-align: left;
+    background: #f1f5fa;
+  }
+  
+  .profile_table .data {
+    padding: 16px 24px;
+  }
+  /* ここまで */
+
+  .form_wrap {
+    display: grid;
+    gap: 16px;
+  }
+  
+  .form_wrap-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+  }
