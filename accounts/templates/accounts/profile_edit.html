@@ -3,10 +3,14 @@
 <div class="card card-profile my-5 mx-auto">
   <div class="card-body">
     <h5 class="card-title text-center">プロフィール</h5>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <table class="profile_table mb-4">
         <tbody>
+          <tr>
+            <th class="header">プロフィール画像</th>
+            <th class="data">{{ form.image }}</th>
+          </tr>
           <tr>
             <th class="header">名前</th>
             <td class="data form_wrap form_wrap-2">

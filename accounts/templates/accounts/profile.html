@@ -8,6 +8,14 @@
       <table class="profile_table mb-4">
         <tbody>
           <tr>
+            <th class="header">プロフィール画像</th>
+            <td class="data">
+                {% if user_data.image %}
+                    <img src="{{ user_data.image.url }}" alt="profile image" width="80px">
+                {% endif %}
+            </td>  
+          </tr>
+          <tr>
             <th class="header">名前</th>
             <td class="data">{{ user_data.first_name }}{{ user_data.last_name }}</td>
           </tr>
