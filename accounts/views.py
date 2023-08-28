@@ -40,12 +40,14 @@ class ProfileEditView( LoginRequiredMixin ,View):
             initial= { #初期値
                 'first_name': user_data.first_name,
                 'last_name': user_data.last_name,
-                'department': user_data.department
+                'department': user_data.department,
+                'image': user_data.image,
             }
         )
 
         return render(request, 'accounts/profile_edit.html', {
-            'form': form_data
+            'form': form_data,
+            'user_data': user_data,
         })
     
     def post(self, request, *args, **kwargs):
@@ -55,6 +57,8 @@ class ProfileEditView( LoginRequiredMixin ,View):
             user_data.first_name = form_data.cleaned_data['first_name']
             user_data.last_name = form_data.cleaned_data['last_name']
             user_data.department = form_data.cleaned_data['department']
+            if request.FILES.get('image'):
+                user_data.image = request.FILES.get('image')
             user_data.save()
             return redirect('profile')
         
