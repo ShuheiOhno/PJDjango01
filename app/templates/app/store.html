@@ -1,0 +1,29 @@
+{% extends "app/base.html" %} {% block content %}
+
+<div class="text-center my-5">
+  <div class="mb-5">
+    <h1>店舗一覧</h1>
+  </div>
+  <div class="row">
+    {% for store in store_data %}
+    <div class="col-lg-3 col-md-6">
+      <div class="card img-thumbnail storelist mb-3">
+        <img
+          class="card-img-top card-thum"
+          src="{{ store.image.url }}"
+          alt=""
+        />
+        <div class="card-body text-center px-2 py-3">
+          <h5 class="font-weight-bold">{{ store.name }}店</h5>
+          <p>{{ store.address }}</p>
+        </div>
+        <a class="stretched-link" href=""></a>
+      </div>
+    </div>
+    {% empty %}
+    <p>まだ店舗がありません</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
