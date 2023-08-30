@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from app.models import Staff, Store
+from django.db.models import Q #or検索用 _gtなど
+from django.utils.timezone import localtime, make_aware
+from datetime import datetime, date, timedelta, time
+
+from app.models import Staff, Store, Booking
 
 from app.models import Store
 
@@ -27,3 +31,49 @@ class StaffView(View):
             'store_data': store_data,
             'staff_data': staff_data,
         })
+    
+class CalendarView(View):
+    def get(self, request, *args, **kwargs):
+        staff_data = Staff.objects.filter(id=self.kwargs['pk']).select_related('user').select_related('store')[0]
+        today = date.today()
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        day = self.kwargs.get('day')
+        if year and month and day:
+            start_date = date(year=year, month=month, day=day)
+        else:
+            start_date = today
+
+        #1週間をリストに格納
+        days = [start_date + timedelta(days=day) for day in range(7)]
+        start_day = days[0]
+        end_day = days[-1]
+
+        calendar = {}
+        for hour in range(10, 21): #10時、21時
+            row = {}
+            for day in days:
+                row[day] = True #予約→False
+            calendar[hour] = row #{'10:00': {'1': False, '2': False, '3': True, ...}, '11:00': {'1': False, '2': Flase, ...}, ...}
+
+        start_time = make_aware(datetime.combine(start_day, time(hour=10, minute=0, second=0))) #日付と時間を合わせる
+        end_time = make_aware(datetime.combine(end_day, time(hour=20, minute=0, second=0)))
+        booking_data = Booking.objects.filter(staff=staff_data).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)) #データ
+        for booking in booking_data:
+            local_time = localtime(booking.start)
+            booking_date = local_time.date()
+            booking_hour = local_time.hour
+            if (booking_hour in calendar) and (booking_date in calendar[booking_hour]):
+                calendar[booking_hour][booking_date] = False
+            
+        return render(request, 'app/calendar.html', {
+            'staff_data': staff_data,
+            'calendar': calendar,
+            'days': days,
+            'start_day': start_day,
+            'end_day': end_day,
+            'before': days[0] - timedelta(days=7),
+            'next': days[-1] + timedelta(days=1),
+            'today': today,
+        })
+
