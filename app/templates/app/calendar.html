@@ -24,6 +24,42 @@
         </div>
     </div>
 
+    <div class="mb-3">
+        <h1>予約</h1>
+        <p>{{ start_day }} ~ {{ end_day }}</p>
+    </div>
+
+    <div class="d-flex mb-2">
+        <div class="mx-3 mr-auto">
+            <a href="{% url 'calendar' staff_data.pk before.year before.month before.day %}">前週</a>
+        </div>
+        <div class="mx-3">
+            <a href="{% url 'calendar' staff_data.pk next.year next.month next.day %}">次週</a>
+        </div>
+    </div>
+
+    <div class="">
+        <table class="table table-borderd bg-light">
+            <thead class="thead-light">
+                <tr>
+                    <th></th>
+                    {% for day in days %}
+                        {% if day.weekday == 5 %}
+                            <th class="text-primary">{{ day | date:"d(D)" }}</th>
+                        {% elif day.weekday == 6 %}
+                            <th class="text-danger">{{ day | date:"d(D)" }}</th>
+                        {% else %}
+                            <th>{{ day | date:"d(D)" }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+
+
+
+        </table>
+    </div>
+
 </div>
 
 {% endblock %}
