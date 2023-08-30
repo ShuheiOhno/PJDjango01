@@ -76,4 +76,8 @@ class CalendarView(View):
             'next': days[-1] + timedelta(days=1),
             'today': today,
         })
+    
+# 予約
+class BookingView(View):
+    pass
 
