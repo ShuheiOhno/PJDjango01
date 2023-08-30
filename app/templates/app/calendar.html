@@ -5,7 +5,7 @@
 <div class="text-center my-5">
     <div class="row">
         <div class="col-md-6 mb-4 text-center calendar">
-            <img src="{{ staff_date.user.image.url }}" alt="staff image" class="img-fluid">
+            <img src="{{ staff_data.user.image.url }}" alt="staff image" class="img-fluid">
         </div>
     </div>
 
@@ -55,7 +55,26 @@
                 </tr>
             </thead>
 
+            <tbody>
+                {% for hour, schedules in calendar.items %}
+                <tr>
+                    <td>{{ hour }}:00</td>
+                    {% for datetime, book in schedules.items %}
+                        <td>
+                            {% if datetime <= today %}
+                                -
+                            {% elif book %}
+                                <a href="">〇</a>
+                            {% else %}
+                                ×
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
 
+                
+            </tbody>
 
         </table>
     </div>
