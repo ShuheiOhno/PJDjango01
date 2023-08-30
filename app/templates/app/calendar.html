@@ -1,0 +1,84 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<div class="text-center my-5">
+    <div class="row">
+        <div class="col-md-6 mb-4 text-center calendar">
+            <img src="{{ staff_data.user.image.url }}" alt="staff image" class="img-fluid">
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-5">
+        <div class="card">
+            <div class="card-body px-2 py-1">
+                <div class="p-4 text-left">
+                    <h3>
+                        {{ staff_data.user.first_name }} {{ staff_data.user.last_name }}
+                    </h3>
+                    <hr>
+                    <p>店舗:{{ staff_data.store.name }}</p>
+                    <p>{{ staff_data.user.description|linebreaksbr }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <h1>予約</h1>
+        <p>{{ start_day }} ~ {{ end_day }}</p>
+    </div>
+
+    <div class="d-flex mb-2">
+        <div class="mx-3 mr-auto">
+            <a href="{% url 'calendar' staff_data.pk before.year before.month before.day %}">前週</a>
+        </div>
+        <div class="mx-3">
+            <a href="{% url 'calendar' staff_data.pk next.year next.month next.day %}">次週</a>
+        </div>
+    </div>
+
+    <div class="">
+        <table class="table table-borderd bg-light">
+            <thead class="thead-light">
+                <tr>
+                    <th></th>
+                    {% for day in days %}
+                        {% if day.weekday == 5 %}
+                            <th class="text-primary">{{ day | date:"d(D)" }}</th>
+                        {% elif day.weekday == 6 %}
+                            <th class="text-danger">{{ day | date:"d(D)" }}</th>
+                        {% else %}
+                            <th>{{ day | date:"d(D)" }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for hour, schedules in calendar.items %}
+                <tr>
+                    <td>{{ hour }}:00</td>
+                    {% for datetime, book in schedules.items %}
+                        <td>
+                            {% if datetime <= today %}
+                                -
+                            {% elif book %}
+                                <a href="">〇</a>
+                            {% else %}
+                                ×
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+
+                
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

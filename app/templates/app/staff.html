@@ -39,7 +39,7 @@
             {{ staff.user.last_name }}
           </h5>
         </div>
-        <a class="stretched-link" href=""></a>
+        <a class="stretched-link" href="{% url 'calendar' staff.pk %}"></a>
       </div>
     </div>
     {% empty %}

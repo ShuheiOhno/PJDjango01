@@ -96,3 +96,9 @@
   .form-label-group input {
     border-radius: 2rem;
   }
+
+  /* calendar */
+  .calendar img {
+    height: 150px;
+    object-fit: contain;
+  }
