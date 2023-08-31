@@ -58,7 +58,7 @@
             <tbody>
                 {% for hour, schedules in calendar.items %}
                 <tr>
-                    <td>{{ hour }}:00</td>
+                    <td scope="row">{{ hour }}:00</td>
                     {% for datetime, book in schedules.items %}
                         <td>
                             {% if datetime <= today %}
