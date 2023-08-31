@@ -102,3 +102,37 @@
     height: 150px;
     object-fit: contain;
   }
+
+  /* booking */
+.card-booking {
+    max-width: 800px;
+  }
+  
+  .booking_table {
+    width: 100%;
+    border: 1px solid #d1dbeb;
+    border-radius: 8px;
+    border-collapse: separate;
+    overflow: hidden;
+  }
+  
+  .booking_table .header {
+    width: 200px;
+    padding: 16px 24px;
+    text-align: left;
+    background: #f1f5fa;
+    /* background: red; */
+  }
+  
+  .booking_table .data {
+    padding: 16px 24px;
+  }
+  
+  .form_wrap {
+    display: grid;
+    gap: 16px;
+  }
+  
+  .form_wrap__2col {
+    grid-template-columns: repeat(2, 1fr);
+  }

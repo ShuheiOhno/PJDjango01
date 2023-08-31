@@ -1,0 +1,65 @@
+{% extends 'app/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="card my-5 mx-auto">
+    <div class="card-body">
+        <h5 class="card-title text-center">予約内容</h5>
+        <table class="booking_table mb-4">
+            <tbody>
+                <tr>
+                    <th class="header">店舗</th>
+                    <td class="data">{{ staff_data.store.name }}</td>
+                </tr>
+                <tr>
+                    <th class="header">スタッフ</th>
+                    <td class="data">{{ staff_data.user.first_name }} {{ staff_data.user.last_name }}</td>
+                </tr>
+                <tr>
+                    <th class="header">日程</th>
+                    <td class="data">
+                        {% for error in form.non_field_errors %}
+                            <h5 class="text-danger">{{ error|linebreaksbr }}</h5>
+                        {% endfor %}
+                        {{ year }}年{{ month }}月{{ day }}日{{ hour }}:00
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h5 class="card-title text-center">予約情報</h5>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table class="booking_table mb-4">
+                <tbody>
+                    <tr>
+                        <th class="header">お名前</th>
+                        <td class="data form_wrap form_wrap__2col">
+                            {% render_field form.first_name class="form-control" placeholder="姓" %}
+                            {% render_field form.last_name class="form-control" placeholder="名" %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="header">電話番号</th>
+                        <td class="data">
+                            {% render_field form.tel class="form-control" placeholder="xxx-xxxx-xxxx" %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="header">備考</th>
+                        <td class="data">
+                            {% render_field form.remarks class="form-control" %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="button mx-auto">
+                <button class="btn btn-lg btn-primary btn-block" type="submit">予約確定</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

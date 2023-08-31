@@ -64,7 +64,7 @@
                             {% if datetime <= today %}
                                 -
                             {% elif book %}
-                                <a href="">〇</a>
+                                <a href="{% url 'booking' staff_data.pk datetime.year datetime.month datetime.day hour %}">〇</a>
                             {% else %}
                                 ×
                             {% endif %}
