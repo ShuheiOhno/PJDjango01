@@ -15,6 +15,14 @@ class IndexView(TemplateView):
 
 class StoreView(View):
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            #ログインしている場合、マイページへ
+            start_date = date.today()
+            weekday = start_date.weekday()
+            if weekday != 6: #日曜日開始
+                start_date = start_date - timedelta(days=weekday + 1)
+            return redirect('mypage', start_date.year, start_date.month, start_date.day)
+
         store_data = Store.objects.all()
 
         return render(request, 'app/store.html', {
@@ -132,3 +140,44 @@ class BookingView(View):
 
 class CompleteReservationView(TemplateView):
     template_name = 'app/complete.html'
+
+class MyPageView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        staff_data = Staff.objects.filter(id=request.user.id).select_related('user').select_related('store')[0]
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        day = self.kwargs.get('day')
+        start_date = date(year=year, month=month, day=day)
+        days = [start_date + timedelta(days=day) for day in range(7)]
+        start_day = days[0]
+        end_day = days[-1]
+
+        calendar = {}
+        for hour in range(10, 21):
+            row = {}
+            for day_ in days:
+                row[day_] = ""
+            calendar[hour] = row #{'10:00': {'1':'Aさん', '2':"", ...},'11:00':{'1':"", '2':'Bさん',...},...}
+        start_time = make_aware(datetime.combine(start_day, time(hour=10, minute=0, second=0)))
+        end_time = make_aware(datetime.combine(end_day, time(hour=20, minute=0, second=0)))
+        booking_data = Booking.objects.filte(staff=staff_data).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)) #exclude：除外
+        for booking in booking_data:
+            local_time = localtime(booking.start)
+            booking_date = local_time.date()
+            booking_hour = local_time.hour
+            if (booking_hour in calendar ) and (booking_date in calendar[booking_hour]):
+                calendar[booking_hour][booking_data] = booking.first_name
+
+        return render(request, 'app/mypage.html', {
+            'staff_data': staff_data,
+            'booking_data': booking_data,
+            'calendar': calendar,
+            'days': days,
+            'start_day': start_day,
+            'end_day': end_day,
+            'before': days[0] - timedelta(days=7),
+            'next': days[-1] + timedelta(days=1),
+            'year': year,
+            'month': month,
+            'day': day,
+        })
