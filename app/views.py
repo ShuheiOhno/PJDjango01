@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q #or検索用 _gtなど
@@ -6,8 +6,7 @@ from django.utils.timezone import localtime, make_aware
 from datetime import datetime, date, timedelta, time
 
 from app.models import Staff, Store, Booking
-
-from app.models import Store
+from app.forms import BookingForm
 
 # Create your views here.
 class IndexView(TemplateView):
@@ -79,5 +78,56 @@ class CalendarView(View):
     
 # 予約
 class BookingView(View):
-    pass
+    def get(self, request, *args, **kwargs):
+        staff_data = Staff.objects.filter(id=self.kwargs['pk']).select_related('user').select_related('store')[0]
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        day = self.kwargs.get('day')
+        hour = self.kwargs.get('hour')
+        form = BookingForm(request.POST or None)
+
+        return render(request, 'app/booking.html', {
+            'staff_data': staff_data,
+            'year': year,
+            'month': month,
+            'day': day,
+            'hour': hour,
+            'form': form,
+        })
+    
+    def post(self, request, *args, **kwargs):
+        staff_data = get_object_or_404(Staff, id=self.kwargs['pk'])
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        day = self.kwargs.get('day')
+        hour = self.kwargs.get('hour')
+        start_time = make_aware(datetime(year=year, month=month, day=day, hour=hour))
+        end_time = make_aware(datetime(year=year, month=month, day=day, hour=hour + 1))
+        booking_data = Booking.objects.filter(staff=staff_data, start=start_time)
+        form = BookingForm(request.POST or None)
+        if booking_data.exists():
+            form.add_error(None, 'この時間帯は予約があります。')
+        else:
+            if form.is_valid():
+                booking = Booking()
+                booking.staff = staff_data
+                booking.start = start_time
+                booking.end = end_time
+                booking.first_name = form.cleaned_data['first_name']
+                booking.last_name = form.cleaned_data['last_name']
+                booking.tel = form.cleaned_data['tel']
+                booking.remarks = form.cleaned_data['remarks']
+                booking.save()
+                return redirect('store')
+        
+        return render(request, 'app/booking.html', {
+            'staff_data': staff_data,
+            'year':  year,
+            'month': month,
+            'day': day,
+            'hour': hour,
+            'form': form,
+        })
+                
+
 
