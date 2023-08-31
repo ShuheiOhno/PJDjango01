@@ -118,7 +118,7 @@ class BookingView(View):
                 booking.tel = form.cleaned_data['tel']
                 booking.remarks = form.cleaned_data['remarks']
                 booking.save()
-                return redirect('store')
+                return redirect('complete')
         
         return render(request, 'app/booking.html', {
             'staff_data': staff_data,
@@ -130,4 +130,5 @@ class BookingView(View):
         })
                 
 
-
+class CompleteReservationView(TemplateView):
+    template_name = 'app/complete.html'
