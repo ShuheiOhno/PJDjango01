@@ -24,26 +24,27 @@
                     <th></th>
                     {% for day in days %}
                         {% if day.weekday == 5 %}
-                            <th class="text-primary">{{ day | date:"d(D)" }}</th>
+                            <th scope="col" class="text-primary">{{ day | date:"d(D)" }}</th>
                         {% elif day.weekday == 6 %}
-                            <th class="text-danger">{{ day | date:"d(D)" }}</th>
+                            <th scope="col" class="text-danger">{{ day | date:"d(D)" }}</th>
                         {% else %}
-                            <th>{{ day | date:"d(D)" }}</th>
+                            <th scope="col">{{ day | date:"d(D)" }}</th>
                         {% endif %}
                     {% endfor %}
                 </tr>
             </thead>
 
             <tbody>
-                {% for hour, schedules in calendar.items %}
+                {% for booking_hour, booking_date in calendar.items %}
                 <tr>
-                    <td>{{ hour }}:00</td>
-                    {% for datetime, book in schedules.items %}
+                    <td scope="row">{{ booking_hour }}:00</td>
+                    {% for datetime, book in booking_date.items %}
                         <td>
                             {% if book == "" %}
                                 出勤
                             {% else %}
-                                {{ book }}様
+                            <p class="mb-0 font-weight-bold  bg-info">{{ book }}様</p>
+                                
                             {% endif %}
                         </td>
                     {% endfor %}

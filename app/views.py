@@ -166,7 +166,7 @@ class MyPageView(LoginRequiredMixin, View):
             booking_date = local_time.date()
             booking_hour = local_time.hour
             if (booking_hour in calendar ) and (booking_date in calendar[booking_hour]):
-                calendar[booking_hour][booking_data] = booking.first_name
+                calendar[booking_hour][booking_date] = booking.first_name
 
         return render(request, 'app/mypage.html', {
             'staff_data': staff_data,
