@@ -160,7 +160,7 @@ class MyPageView(LoginRequiredMixin, View):
             calendar[hour] = row #{'10:00': {'1':'Aさん', '2':"", ...},'11:00':{'1':"", '2':'Bさん',...},...}
         start_time = make_aware(datetime.combine(start_day, time(hour=10, minute=0, second=0)))
         end_time = make_aware(datetime.combine(end_day, time(hour=20, minute=0, second=0)))
-        booking_data = Booking.objects.filte(staff=staff_data).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)) #exclude：除外
+        booking_data = Booking.objects.filter(staff=staff_data).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)) #exclude：除外
         for booking in booking_data:
             local_time = localtime(booking.start)
             booking_date = local_time.date()
