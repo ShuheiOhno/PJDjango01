@@ -51,6 +51,10 @@
                                 {% else %}
                                     <p class="mb-0 font-weight-bold  bg-info">{{ book }}様</p>
                                 {% endif %}
+                            <form action="{% url 'delete' datetime.year datetime.month datetime.day booking_hour %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-danger" type="submit">取り消し</button>
+                            </form>
                             {% endif %}
                         </td>
                     {% endfor %}
