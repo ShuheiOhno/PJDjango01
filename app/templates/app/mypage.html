@@ -41,10 +41,16 @@
                     {% for datetime, book in booking_date.items %}
                         <td>
                             {% if book == "" %}
-                                出勤
+                            <form action="{% url 'holiday' datetime.year datetime.month datetime.day booking_hour %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-light" type="submit">出勤</button>
+                            </form>
                             {% else %}
-                            <p class="mb-0 font-weight-bold  bg-info">{{ book }}様</p>
-                                
+                                {% if book == None %}
+                                    <p class="mb-0">休み</p>
+                                {% else %}
+                                    <p class="mb-0 font-weight-bold  bg-info">{{ book }}様</p>
+                                {% endif %}
                             {% endif %}
                         </td>
                     {% endfor %}
