@@ -198,3 +198,18 @@ def Holiday(request, year, month, day, hour):
     if weekday != 6: #日曜開始
         start_date = start_date - timedelta(days=weekday + 1)
     return redirect('mypage', year=start_date.year, month=start_date.month, day=start_date.day)
+
+@require_POST
+def Delete(request, year, month, day, hour):
+    start_time = make_aware(datetime(year=year, month=month, day=day, hour=hour))
+    booking_data = Booking.objects.filter(start=start_time)
+
+    booking_data.delete()
+    print('sss')
+    
+
+    start_date = date(year=year, month=month, day=day)
+    weekday = start_date.weekday()
+    if weekday != 6:
+        start_date = start_date - timedelta(days=weekday+1)
+    return redirect('mypage', year=start_date.year, month=start_date.month, day=start_date.day)
