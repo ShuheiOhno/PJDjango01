@@ -3,3 +3,5 @@ django-allauth~=0.55.0
 django-widget-tweaks~=1.5.0
 pillow
 django-environ
+gunicorn
+psycopg2
